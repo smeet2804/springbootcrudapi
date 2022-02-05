@@ -37,7 +37,7 @@ public class ClgNameService {
                 System.out.println(data[3]);
 
                 System.out.println("----------------------");
-                ds.save(cn);
+              //  ds.save(cn);
             }
 
 

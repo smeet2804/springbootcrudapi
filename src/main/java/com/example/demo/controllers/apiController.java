@@ -1,23 +1,25 @@
 package com.example.demo.controllers;
 
-import com.example.demo.models.ClgNames;
-import com.example.demo.models.User;
 import com.example.demo.repo.DatabaseSave;
-import com.example.demo.repo.UserRepo;
 import com.example.demo.service.ClgNameService;
-import org.hibernate.dialect.Database;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class apiController {
 
   /*  @Autowired
     private UserRepo userRepo;
-   */ @Autowired
+   */
+    @Autowired
     private DatabaseSave ds;
     @Autowired
     private ClgNameService cns;
@@ -53,8 +55,8 @@ public class apiController {
     }
 */
     @GetMapping("/name/{name}")
-    public List<ClgNames> getUserName(@PathVariable String name){
-      return ds.getClgByName(name);
+    public List<Map<String,Object>> getUserName(@PathVariable String name){
+      return ds.runNativeQuery(name);
    }
     @RequestMapping(path="/feedClgData")
     public void setDataInDB() throws IOException {
@@ -62,6 +64,19 @@ public class apiController {
 
 
         cns.saveClgData();
+    }
+
+
+    @PostMapping("/upload-file")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException{
+
+        InputStream is=file.getInputStream();
+        byte data[]=new byte[is.available()];
+        is.read(data);
+        
+
+        return new ResponseEntity<>("Hello World!", HttpStatus.OK);
+        //  return ResponseEntity.ok("Working");
     }
 
 }
